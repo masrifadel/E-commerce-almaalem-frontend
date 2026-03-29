@@ -1,6 +1,11 @@
+import { AppProvider } from "@/Contexts/AppContext";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Common/Header";
+import Footer from "@/components/Common/Footer";
+import { Toaster } from "sonner";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +32,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* <head>
+        <title>Next.js App</title>
+      </head> */}
+      <body className="min-h-full flex flex-col">
+        <AppProvider>
+          <Toaster />
+          <Header />
+          <main className="flex-grow bg-[url('/tableye.png')]">{children}</main>
+          <Footer />
+        </AppProvider>
+      </body>
     </html>
   );
 }
