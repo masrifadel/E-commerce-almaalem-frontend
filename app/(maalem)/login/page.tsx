@@ -32,16 +32,19 @@ const Login = () => {
 
       console.log("Looooocallll Cart", localCart);
 
-      const cartResponse = await fetch("http://localhost:5001/api/cart", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const cartResponse = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/cart",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            items: localCart,
+          }),
         },
-        body: JSON.stringify({
-          items: localCart,
-        }),
-      });
+      );
 
       const cartData = await cartResponse.json();
       console.log("cartData", cartData);

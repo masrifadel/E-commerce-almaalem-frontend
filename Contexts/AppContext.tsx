@@ -59,7 +59,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshCategories = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/category");
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/category",
+      );
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -75,7 +77,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/products");
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/products",
+      );
       if (response.ok) {
         const data = await response.json();
         setProducts(data.products || data);
@@ -96,7 +100,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
       console.log("🔑 Token found:", token ? "YES" : "NO");
       const response = await fetch(
-        "http://localhost:5001/api/checkout/admin/all",
+        "https://maalem-backend-ybme.onrender.com/api/checkout/admin/all",
         {
           method: "GET",
           headers: {
@@ -172,9 +176,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (savedToken) {
         try {
-          const res = await fetch("http://localhost:5001/api/cart", {
-            headers: { Authorization: `Bearer ${savedToken}` },
-          });
+          const res = await fetch(
+            "https://maalem-backend-ybme.onrender.com/api/cart",
+            {
+              headers: { Authorization: `Bearer ${savedToken}` },
+            },
+          );
           const result = await res.json();
           if (result.cart) setData(result.cart.items);
         } catch (err) {
