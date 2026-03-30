@@ -15,7 +15,20 @@ const nextConfig = {
 
   // Image optimization
   images: {
-    domains: ["maalem-backend-ybme.onrender.com", "your-api-domain.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "maalem-backend-ybme.onrender.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "your-api-domain.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
     formats: ["image/webp", "image/avif"],
   },
 

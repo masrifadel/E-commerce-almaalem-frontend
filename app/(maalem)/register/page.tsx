@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import register from "../assets/register.webp";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppContext } from "@/Contexts/AppContext";
 import { toast } from "sonner";
 
-const Register = () => {
+function RegisterContent() {
   const { setData } = useAppContext();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -209,5 +209,12 @@ const Register = () => {
       </div>
     </div>
   );
-};
-export default Register;
+}
+
+export default function Register() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterContent />
+    </Suspense>
+  );
+}

@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppContext } from "@/Contexts/AppContext";
 
-const Login = () => {
+function LoginContent() {
   const { setData } = useAppContext();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,8 +29,6 @@ const Login = () => {
       const token = localStorage.getItem("token");
       const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
       const localUser = JSON.parse(localStorage.getItem("user") || "");
-
-      console.log("Looooocallll Cart", localCart);
 
       const cartResponse = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/cart",
@@ -139,5 +137,12 @@ const Login = () => {
       </div>
     </div>
   );
-};
-export default Login;
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
