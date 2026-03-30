@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Use Turbopack explicitly to avoid Vercel build conflicts
+  turbopack: {},
+
   // Use webpack explicitly to avoid Turbopack conflicts
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
