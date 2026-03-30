@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack configuration for Next.js 16
-  turbopack: {},
-
-  // Remove console.log in production
+  // Use webpack explicitly to avoid Turbopack conflicts
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       Object.keys(config.entry).forEach((key) => {
@@ -15,7 +12,7 @@ const nextConfig = {
 
   // Image optimization
   images: {
-    domains: ["your-api-domain.com"],
+    domains: ["maalem-backend-ybme.onrender.com", "your-api-domain.com"],
     formats: ["image/webp", "image/avif"],
   },
 
