@@ -40,7 +40,7 @@ const Hero = () => {
             href={"menu/all"}
             className="group flex z-50 items-center gap-2 bg-[#c27a2c] hover:bg-[#2e4a63] cursor-pointer text-white px-6 py-3 rounded-lg font-semibold transition duration-300"
           >
-            View Menu
+            اطلب القائمة | View Menu
             <span className="text-lg transform transition-transform group-hover:translate-x-1">
               ›
             </span>
@@ -50,17 +50,23 @@ const Hero = () => {
           {/* Rating */}
           <div className="flex items-center gap-2 pl-5">
             <FaStar className="text-[#c27a2c] text-xl sm:text-xl" />
-            <span className="text-white font-semibold">4.8 Rating</span>
+            <span className="text-white font-semibold">
+              4.8 تقييم | 4.8 Rating
+            </span>
           </div>
           <span className="text-gray-400">|</span>
           <div className="flex items-center gap-2">
             <FaTruck className="text-[#c27a2c] text-lg text-3xl sm:text-xl" />
-            <span className="text-white font-semibold">Fast Delivery</span>
+            <span className="text-white font-semibold">
+              توصيل سريع | Fast Delivery
+            </span>
           </div>
           <span className="text-gray-400">|</span>
           <div className="flex items-center justify-center gap-2 pr-3">
             <MdOutlineOutdoorGrill className="text-[#c27a2c] text-3xl sm:text-xl" />
-            <span className="text-white font-semibold">Charcoal Grill</span>
+            <span className="text-white font-semibold">
+              شواء فحم | Charcoal Grill
+            </span>
           </div>
         </div>
       </div>

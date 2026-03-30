@@ -35,7 +35,7 @@ export default function Home() {
       {bestSeller && (
         <div className="min-h-[calc(100vh-116px)] sm:h-[calc(100vh-128px)] flex flex-col mt-10 p-4 sm:p-8">
           <h2 className="text-3xl text-center font-bold mb-2 text-[#c27a2c]">
-            Best Seller
+            الأكثر مبيعاً | Best Seller
           </h2>
           <div className="flex-grow max-h-[calc(100vh-128px)] sm:h-[calc(100vh-180px)]">
             <ProductDetails
