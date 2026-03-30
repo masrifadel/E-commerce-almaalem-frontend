@@ -66,11 +66,14 @@ const page = () => {
       console.log("Hi");
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5001/api/user/addresses", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https://maalem-backend-ybme.onrender.com/api/user/addresses",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         const data = await res.json();
         if (res.ok) {
           setSavedAddresses(data.addresses);
@@ -87,14 +90,17 @@ const page = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5001/api/checkout", {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/checkout",
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ shippingAddress }),
         },
-        body: JSON.stringify({ shippingAddress }),
-      });
+      );
       const data = await res.json();
       if (res.ok) {
         console.log("✅ Order placed successfully!");

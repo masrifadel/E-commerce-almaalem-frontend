@@ -72,7 +72,7 @@ export default function OrderList() {
       );
 
       const response = await fetch(
-        "http://localhost:5001/api/checkout/admin/all",
+        "https://maalem-backend-ybme.onrender.com/api/checkout/admin/all",
         {
           method: "GET",
           headers: {
@@ -109,7 +109,7 @@ export default function OrderList() {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch(
-        `http://localhost:5001/api/checkout/admin/${orderId}/status`,
+        `https://maalem-backend-ybme.onrender.com/api/checkout/admin/${orderId}/status`,
         {
           method: "PUT",
           headers: {
@@ -201,7 +201,7 @@ export default function OrderList() {
                       <img
                         src={
                           item.productId?.url
-                            ? `http://localhost:5001${item.productId.url}`
+                            ? `https://maalem-backend-ybme.onrender.com${item.productId.url}`
                             : "/placeholder.png"
                         }
                         alt={item.productId?.name || "Product"}

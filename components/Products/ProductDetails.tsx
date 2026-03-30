@@ -26,7 +26,7 @@ const ProductDetails = ({
       {/* Main Image */}
       <div className="sm:w-1/2 h-75 sm:h-auto grow rounded-lg">
         <img
-          src={`http://localhost:5001${url}`}
+          src={`https://maalem-backend-ybme.onrender.com${url}`}
           alt={name}
           className={`w-full h-full object-cover ${bgColor === "#2e4a63" ? "rounded-none" : "rounded-2xl"}`}
         />

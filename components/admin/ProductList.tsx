@@ -50,7 +50,7 @@ export default function ProductList() {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/api/products/${productId}`,
+        `https://maalem-backend-ybme.onrender.com/api/products/${productId}`,
         {
           method: "DELETE",
           headers: {

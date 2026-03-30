@@ -9,17 +9,20 @@ const CartContent = () => {
     const token = localStorage.getItem("token");
     if (token) {
       console.log("Increment from the backend side");
-      const res = await fetch("http://localhost:5001/api/cart/", {
-        method: "PUT",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/cart/",
+        {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: item.product._id,
+            action: "increment",
+          }),
         },
-        body: JSON.stringify({
-          productId: item.product._id,
-          action: "increment",
-        }),
-      });
+      );
       const updatedCart = await res.json();
       setData(updatedCart.cart.items);
       console.log(updatedCart);
@@ -39,17 +42,20 @@ const CartContent = () => {
   const handleDecCart = async (item: any) => {
     const token = localStorage.getItem("token");
     if (token) {
-      const res = await fetch("http://localhost:5001/api/cart/", {
-        method: "PUT",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/cart/",
+        {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: item.product._id,
+            action: "decrement",
+          }),
         },
-        body: JSON.stringify({
-          productId: item.product._id,
-          action: "decrement",
-        }),
-      });
+      );
       const updatedCart = await res.json();
       setData(updatedCart.cart.items);
       console.log(updatedCart);
@@ -75,17 +81,20 @@ const CartContent = () => {
   const handleDelete = async (item: any) => {
     const token = localStorage.getItem("token");
     if (token) {
-      const res = await fetch("http://localhost:5001/api/cart/", {
-        method: "PUT",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/cart/",
+        {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: item.product._id,
+            action: "delete",
+          }),
         },
-        body: JSON.stringify({
-          productId: item.product._id,
-          action: "delete",
-        }),
-      });
+      );
       const updatedCart = await res.json();
       setData(updatedCart.cart.items);
       console.log(updatedCart);
@@ -107,7 +116,7 @@ const CartContent = () => {
               <div className="flex items-start">
                 <img
                   src={
-                    "http://localhost:5001" +
+                    "https://maalem-backend-ybme.onrender.com" +
                     (item?.product?.url ? item.product.url : item.url)
                   }
                   alt={item?.product?.name || item.name}

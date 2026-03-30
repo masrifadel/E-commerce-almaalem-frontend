@@ -20,9 +20,12 @@ const Profile = () => {
 
     const fetchorders = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/checkout", {
-          headers: { Authorization: `Bearer ${savedToken}` },
-        });
+        const res = await fetch(
+          "https://maalem-backend-ybme.onrender.com/api/checkout",
+          {
+            headers: { Authorization: `Bearer ${savedToken}` },
+          },
+        );
         const result = await res.json();
         setOrders(result);
       } catch (err) {

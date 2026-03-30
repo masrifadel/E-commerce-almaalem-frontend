@@ -21,17 +21,20 @@ const Quantity = ({ product }: { product: Product }) => {
     const token = localStorage.getItem("token");
     try {
       if (token) {
-        const res = await fetch("http://localhost:5001/api/cart/addProduct", {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https://maalem-backend-ybme.onrender.com/api/cart/addProduct",
+          {
+            method: "POST",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              productId: product._id,
+              quantity: quantitySelected,
+            }),
           },
-          body: JSON.stringify({
-            productId: product._id,
-            quantity: quantitySelected,
-          }),
-        });
+        );
         const AddedCart = await res.json();
         console.log("AddedCart ======================== >", AddedCart);
         setData(AddedCart.cart.items);

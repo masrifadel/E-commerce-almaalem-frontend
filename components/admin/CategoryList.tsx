@@ -40,7 +40,7 @@ export default function CategoryList() {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/api/category/${editingCategory._id}`,
+        `https://maalem-backend-ybme.onrender.com/api/category/${editingCategory._id}`,
         {
           method: "PUT",
           headers: {
@@ -70,7 +70,7 @@ export default function CategoryList() {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/api/category/${categoryId}`,
+        `https://maalem-backend-ybme.onrender.com/api/category/${categoryId}`,
         {
           method: "DELETE",
           headers: {

@@ -22,13 +22,16 @@ export default function CategoryForm() {
     console.log("Token:", token);
     // send to API
     try {
-      const response = await fetch("http://localhost:5001/api/category", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + token,
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/category",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
 

@@ -120,8 +120,8 @@ export default function ProductForm({
 
     try {
       const url = localEditingProduct?._id
-        ? `http://localhost:5001/api/products/${localEditingProduct._id}`
-        : "http://localhost:5001/api/products";
+        ? `https://maalem-backend-ybme.onrender.com/api/products/${localEditingProduct._id}`
+        : "https://maalem-backend-ybme.onrender.com/api/products";
 
       const method = localEditingProduct?._id ? "PUT" : "POST";
 

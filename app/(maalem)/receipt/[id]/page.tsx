@@ -39,7 +39,7 @@ const ReceiptPage = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/checkout/${entityId}`,
+          `https://maalem-backend-ybme.onrender.com/api/checkout/${entityId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
