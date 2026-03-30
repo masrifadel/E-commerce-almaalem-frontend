@@ -193,7 +193,7 @@ export default function OrderList() {
               <div className="mb-3">
                 <div className="text-gray-400 text-sm mb-2">Items:</div>
                 <div className="space-y-2">
-                  {order.items.map((item, index) => (
+                  {order.items.map((item: any, index: number) => (
                     <div
                       key={index}
                       className="flex items-center gap-3 text-sm"
