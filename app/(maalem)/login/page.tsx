@@ -53,7 +53,7 @@ const Login = () => {
       if (localUser?.role === "user") {
         router.push("profile");
       } else if (localUser?.role === "admin") {
-        router.push("maalem");
+        router.push("admin");
       }
       router.refresh();
     } catch (error) {

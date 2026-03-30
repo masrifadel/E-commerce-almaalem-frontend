@@ -62,6 +62,7 @@ const Register = () => {
       // Success - store user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      const localUser = JSON.parse(localStorage.getItem("user") || "{}");
       const token = localStorage.getItem("token");
       const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
@@ -97,7 +98,11 @@ const Register = () => {
 
       // Redirect after a short delay
       setTimeout(() => {
-        router.push("profile");
+        if (localUser?.role === "admin") {
+          router.push("admin");
+        } else {
+          router.push("profile");
+        }
         router.refresh();
       }, 1500);
     } catch (error) {

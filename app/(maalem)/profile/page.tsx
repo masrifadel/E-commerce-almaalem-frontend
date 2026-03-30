@@ -2,10 +2,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/Contexts/AppContext";
-
 import MyOrdersPage from "./MyOrdersPage";
+import LoadingSpinner from "@/components/UI/LoadingSpinner";
+
 const Profile = () => {
-  const { setData } = useAppContext();
+  const { setData, ordersLoading } = useAppContext();
   const router = useRouter();
   const [user, setUser] = useState<{ name?: string; email?: string }>({});
   const [orders, setOrders] = useState<any[]>([]);
@@ -60,7 +61,14 @@ const Profile = () => {
         </button>
       </div>
       <div className="w-full md:w-2/3 lg:w-3/4">
-        <MyOrdersPage orders={orders} />
+        {ordersLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <LoadingSpinner size="large" />
+            <p className="text-white text-lg mt-4">Loading your orders...</p>
+          </div>
+        ) : (
+          <MyOrdersPage orders={orders} />
+        )}
       </div>
     </div>
   );

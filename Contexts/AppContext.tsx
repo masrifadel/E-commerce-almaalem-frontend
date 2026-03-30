@@ -30,13 +30,19 @@ type AppContextType = {
   >;
   refreshCategories: () => void;
   products: any[];
-  refreshProducts: () => void;
+  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
   orders: any[];
-  refreshOrders: () => void;
   setOrders: React.Dispatch<React.SetStateAction<any[]>>;
   triggerOrderUpdate: () => void;
   refreshTrigger: boolean;
   setRefreshTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  // Loading states
+  categoriesLoading: boolean;
+  setCategoriesLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  productsLoading: boolean;
+  setProductsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  ordersLoading: boolean;
+  setOrdersLoading: React.Dispatch<React.SetStateAction<boolean>>;
   fetchData: boolean;
   setFetchData: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -53,11 +59,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   >([]);
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  // Loading states
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(false);
 
   // Use ref to track initial fetch state
   const isInitialFetchRef = useRef(false);
 
   const refreshCategories = async () => {
+    // Skip API calls during build time
+    if (typeof window === "undefined") return;
+
+    // Set loading state
+    setCategoriesLoading(true);
+
     try {
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/category",
@@ -72,10 +88,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.error("Failed to refresh categories:", error);
+    } finally {
+      // Clear loading state
+      setCategoriesLoading(false);
     }
   };
 
   const refreshProducts = async () => {
+    // Skip API calls during build time
+    if (typeof window === "undefined") return;
+
+    // Set loading state
+    setProductsLoading(true);
+
     try {
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/products",
@@ -90,11 +115,18 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.error("Failed to refresh products:", error);
+    } finally {
+      // Clear loading state
+      setProductsLoading(false);
     }
   };
 
   const refreshOrders = async () => {
     console.log("🔄 refreshOrders called!");
+
+    // Set loading state
+    setOrdersLoading(true);
+
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -120,6 +152,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.error("❌ Failed to refresh orders:", error);
+    } finally {
+      // Clear loading state
+      setOrdersLoading(false);
     }
   };
 
@@ -172,6 +207,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchInitialCart = async () => {
+      // Skip API calls during build time
+      if (typeof window === "undefined") return;
+
       const savedToken = localStorage.getItem("token");
 
       if (savedToken) {
@@ -218,15 +256,23 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         setCategories,
         refreshCategories,
         products,
+        setProducts,
         refreshProducts,
         orders,
         setOrders,
-        refreshOrders,
         triggerOrderUpdate,
+        setRefreshTrigger,
         setFetchData,
         fetchData,
         refreshTrigger,
         setRefreshTrigger,
+        // Loading states
+        categoriesLoading,
+        setCategoriesLoading,
+        productsLoading,
+        setProductsLoading,
+        ordersLoading,
+        setOrdersLoading,
       }}
     >
       {children}
