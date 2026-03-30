@@ -28,7 +28,6 @@ type AppContextType = {
       }[]
     >
   >;
-  refreshCategories: () => void;
   products: any[];
   setProducts: React.Dispatch<React.SetStateAction<any[]>>;
   orders: any[];
@@ -45,6 +44,10 @@ type AppContextType = {
   setOrdersLoading: React.Dispatch<React.SetStateAction<boolean>>;
   fetchData: boolean;
   setFetchData: React.Dispatch<React.SetStateAction<boolean>>;
+  // Refresh functions
+  refreshCategories: () => void;
+  refreshProducts: () => void;
+  refreshOrders: () => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -122,15 +125,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const refreshOrders = async () => {
-    console.log("🔄 refreshOrders called!");
-
     // Set loading state
     setOrdersLoading(true);
 
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      console.log("🔑 Token found:", token ? "YES" : "NO");
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/checkout/admin/all",
         {
@@ -160,7 +160,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Add direct order update function
   const triggerOrderUpdate = () => {
-    console.log("🚀 triggerOrderUpdate called!");
     refreshOrders();
     // Also trigger localStorage for cross-tab support
     localStorage.setItem("orders-updated", Date.now().toString());
@@ -260,8 +259,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         refreshProducts,
         orders,
         setOrders,
+        refreshOrders,
         triggerOrderUpdate,
-        setRefreshTrigger,
         setFetchData,
         fetchData,
         refreshTrigger,
