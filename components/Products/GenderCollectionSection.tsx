@@ -4,24 +4,27 @@ import { useAppContext } from "@/Contexts/AppContext";
 
 const GenderCollectionSection = () => {
   const { categories } = useAppContext();
-  const displayedCategories = categories.slice(1);
+
+  // Helper function to convert category path to match URL format
+  const toSlug = (path: string) =>
+    path.toLowerCase().replaceAll(" & ", "&").replaceAll(" ", "");
 
   return (
     <div className="container mx-auto py-10 px-4">
       {/* Flex container with wrap and centering */}
       <div className="flex flex-wrap justify-center gap-4">
-        {displayedCategories.map((category: any) => (
+        {categories.map((category: any) => (
           <div
             key={category._id}
             className="relative overflow-hidden group rounded-lg h-[300px] sm:h-[400px] w-[calc(50%-8px)] md:w-[calc(50%-8px)] lg:flex-1 lg:min-w-[400px]"
           >
             <Link
-              href={`/menu/${category.path}`}
+              href={`/menu/${toSlug(category.path)}`}
               className="block h-full w-full"
             >
               <img
                 src={
-                  `http://localhost:5001${category.imageUrl}` ||
+                  `https://maalem-backend-ybme.onrender.com${category.imageUrl}` ||
                   "/placeholder.png"
                 }
                 alt={category.name}

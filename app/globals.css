@@ -1,15 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f8f9fa;
+  --foreground: #212529;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +15,436 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Brand Colors - Your Gold Theme */
+:root {
+  --brand-primary: #c27a2c;
+  --brand-primary-dark: #a56624;
+  --brand-primary-light: #d4a574;
+  --brand-secondary: #0b1c2c;
+  --brand-accent: #2e4a63;
+
+  /* E-commerce Colors */
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+
+  /* Neutral Colors */
+  --gray-50: #f8f9fa;
+  --gray-100: #e9ecef;
+  --gray-200: #dee2e6;
+  --gray-300: #ced4da;
+  --gray-400: #adb5bd;
+  --gray-500: #6c757d;
+  --gray-600: #495057;
+  --gray-700: #343a40;
+  --gray-800: #212529;
+  --gray-900: #000000;
+
+  /* Component Colors */
+  --card-bg: #ffffff;
+  --card-border: #e9ecef;
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-focus: var(--brand-primary);
+  --text-muted: #6c757d;
+}
+
+/* Modern Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1rem;
+}
+
+/* Premium Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  min-height: 48px;
+}
+
+.btn-primary {
+  background: var(--brand-primary);
+  color: #ffffff;
+  border: 2px solid var(--brand-primary);
+}
+
+.btn-primary:hover {
+  background: var(--brand-primary-dark);
+  border-color: var(--brand-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(194, 122, 44, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--brand-primary);
+  border: 2px solid var(--brand-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--brand-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--gray-700);
+  border: 2px solid var(--gray-300);
+}
+
+.btn-outline:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+}
+
+.btn-success {
+  background: var(--success);
+  color: #ffffff;
+  border: 2px solid var(--success);
+}
+
+.btn-success:hover {
+  background: #218838;
+  border-color: #218838;
+}
+
+/* Modern Input Styles */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gray-700);
+  background: var(--input-bg);
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  min-height: 48px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(194, 122, 44, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--gray-400);
+}
+
+/* Modern Card Styles */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--gray-50);
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.card-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--card-border);
+  background: var(--gray-50);
+}
+
+/* Product Cards */
+.product-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: var(--gray-100);
+}
+
+.product-info {
+  padding: 16px;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--gray-800);
+}
+
+.product-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.product-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Navigation */
+.navbar {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brand-primary);
+  text-decoration: none;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: var(--gray-700);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--brand-primary);
+  background: var(--gray-50);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(
+    135deg,
+    var(--brand-secondary) 0%,
+    var(--brand-accent) 100%
+  );
+  color: #ffffff;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--brand-primary);
+}
+.text-secondary {
+  color: var(--gray-600);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+.text-success {
+  color: var(--success);
+}
+.text-warning {
+  color: var(--warning);
+}
+.text-danger {
+  color: var(--danger);
+}
+
+.bg-primary {
+  background: var(--brand-primary);
+}
+.bg-secondary {
+  background: var(--gray-100);
+}
+.bg-light {
+  background: var(--gray-50);
+}
+
+.border-primary {
+  border-color: var(--brand-primary);
+}
+.border-secondary {
+  border-color: var(--gray-300);
+}
+
+/* Badge Styles */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.badge-primary {
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.badge-success {
+  background: var(--success);
+  color: #ffffff;
+}
+
+.badge-warning {
+  background: var(--warning);
+  color: #000000;
+}
+
+.badge-danger {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+/* Alert Styles */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.alert-warning {
+  background: #fff3cd;
+  color: #856404;
+  border-color: #ffeaa7;
+}
+
+.alert-danger {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+/* Better Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary-dark);
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-200);
+  border-top: 4px solid var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

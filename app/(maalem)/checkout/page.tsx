@@ -5,7 +5,14 @@ import { toast } from "sonner";
 import { useAppContext } from "@/Contexts/AppContext";
 const page = () => {
   const router = useRouter();
-  const { setFetchData, fetchData, setData } = useAppContext();
+  const {
+    setFetchData,
+    fetchData,
+    setData,
+    refreshTrigger,
+    setRefreshTrigger,
+    triggerOrderUpdate,
+  } = useAppContext();
   interface CitiesData {
     [key: string]: string[]; // This is the "Index Signature" TypeScript is asking for
   }
@@ -90,8 +97,15 @@ const page = () => {
       });
       const data = await res.json();
       if (res.ok) {
+        console.log("✅ Order placed successfully!");
         setData([]);
         setFetchData((prev) => !prev);
+        setRefreshTrigger(!refreshTrigger);
+
+        // Trigger immediate order update in admin panel
+        console.log("📞 Calling triggerOrderUpdate...");
+        triggerOrderUpdate();
+
         router.push(`/receipt/${data.order._id}`);
       } else {
         toast.error(data.message);
@@ -113,7 +127,7 @@ const page = () => {
     citiesByGovernorate[shippingAddress.governorate] || [];
 
   return (
-    <div className="flex justify-center items-center my-4">
+    <div className="flex justify-center items-center py-4">
       <div className="flex flex-col sm:flex-row">
         <div className="bg-[#c27a2c] p-2 rounded">
           <h1 className="text-2xl font-bold border-b-2 border-white pb-2 mb-4 text-white ">

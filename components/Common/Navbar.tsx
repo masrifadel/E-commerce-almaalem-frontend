@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-  const { categories, setCategories } = useAppContext();
+  const { categories } = useAppContext();
 
   const handleProfileClick = () => {
     // 1. Check if the token exists in LocalStorage
@@ -37,25 +37,6 @@ const Navbar = () => {
   const toggleNavDrawer = () => {
     setNavDrawerOpen(!navDrawerOpen);
   };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/category");
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setCategories(data);
-      } catch (error: any) {
-        console.log("Failed to fetch categories:", error.message);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   return (
     <>

@@ -4,6 +4,7 @@ import register from "../assets/register.webp";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppContext } from "@/Contexts/AppContext";
+import { toast } from "sonner";
 
 const Register = () => {
   const { setData } = useAppContext();
@@ -17,39 +18,95 @@ const Register = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    // Show loading toast
+    const loadingToast = toast.loading("Creating your account...");
+
     try {
-      const response = await fetch("http://localhost:5001/api/user/signup", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/user/signup",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        },
+      );
+
       const data = await response.json();
+
+      if (!response.ok) {
+        // Handle different error types
+        if (
+          response.status === 400 &&
+          data.message?.includes("already exists")
+        ) {
+          toast.error(
+            "User with this email already exists. Please login instead.",
+            { id: loadingToast },
+          );
+          return;
+        } else if (response.status === 400) {
+          toast.error(
+            data.message || "Invalid input. Please check your details.",
+            { id: loadingToast },
+          );
+          return;
+        } else {
+          toast.error("Registration failed. Please try again.", {
+            id: loadingToast,
+          });
+          return;
+        }
+      }
+
+      // Success - store user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       const token = localStorage.getItem("token");
       const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-      const cartResponse = await fetch("http://localhost:5001/api/cart", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          items: localCart,
-        }),
+      // Sync cart if user has items
+      if (localCart.length > 0) {
+        try {
+          const cartResponse = await fetch(
+            "https://maalem-backend-ybme.onrender.com/api/cart",
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                items: localCart,
+              }),
+            },
+          );
+
+          const cartData = await cartResponse.json();
+          setData(cartData.cart.items);
+          localStorage.removeItem("cart");
+        } catch (cartError) {
+          console.log("Cart sync failed:", cartError);
+          // Continue even if cart sync fails
+        }
+      }
+
+      toast.success("Account created successfully! Welcome to AlMaalem!", {
+        id: loadingToast,
       });
 
-      const cartData = await cartResponse.json();
-      console.log("cartData", cartData);
-      setData(cartData.cart.items);
-      localStorage.removeItem("cart");
-      router.push("profile");
-      router.refresh();
+      // Redirect after a short delay
+      setTimeout(() => {
+        router.push("profile");
+        router.refresh();
+      }, 1500);
     } catch (error) {
       console.log(error);
+      toast.error(
+        "Network error. Please check your connection and try again.",
+        { id: loadingToast },
+      );
     }
-    console.log(name, email, password);
   };
 
   return (

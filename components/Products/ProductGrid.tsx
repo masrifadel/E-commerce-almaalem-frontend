@@ -16,6 +16,10 @@ const ProductGrid = ({ products }: { products: any }) => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [open, setOpen] = useState(false);
 
+  // Helper function to convert category path to match URL format
+  const toSlug = (path: string) =>
+    path.toLowerCase().replaceAll(" & ", "&").replaceAll(" ", "");
+
   const handleClickOpen = (product: any) => {
     setSelectedProduct(product);
     setOpen(true);
@@ -28,16 +32,21 @@ const ProductGrid = ({ products }: { products: any }) => {
 
   const filteredProducts =
     category == "all"
-      ? products.filter(
-          (product: any) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase()),
-        )
-      : products
+      ? products
+          .filter((product: any) => product.available !== false) // Only show available products
           .filter(
-            (item: any) => item.categoryId.path === category.toLowerCase(),
+            (product: any) =>
+              product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              product.description
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()),
+          )
+      : products
+          .filter((item: any) => item.available !== false) // Only show available products
+          .filter(
+            (item: any) =>
+              item.categoryId?.path &&
+              toSlug(item.categoryId.path) === category.toLowerCase(),
           )
           .filter(
             (product: any) =>
@@ -58,7 +67,7 @@ const ProductGrid = ({ products }: { products: any }) => {
             {/* Image Container */}
             <div className="relative w-full h-56 sm:h-64 md:h-72 lg:h-84">
               <img
-                src={`http://localhost:5001${product.url}`}
+                src={`https://maalem-backend-ybme.onrender.com${product.url}`}
                 alt={product.name}
                 className="h-full w-full object-cover transition duration-500 sm:group-hover:scale-110"
               />
