@@ -11,7 +11,6 @@ import CartDrawer from "../Layout/CartDrawer";
 import SearchBar from "./SearchBar";
 import { useAppContext } from "@/Contexts/AppContext";
 import { useRouter } from "next/navigation";
-import LogoutButton from "../UI/LogoutButton";
 
 const Navbar = () => {
   const router = useRouter();
@@ -80,8 +79,6 @@ const Navbar = () => {
                 className={`text-xl ${pathname === "/profile" ? "text-[#c27a2c]" : "text-white"} hover:text-[#c27a2c] transition duration-200`}
               />
             </button>
-
-            <LogoutButton isAdmin={false} />
 
             <button
               className="relative cursor-pointer text-xl"

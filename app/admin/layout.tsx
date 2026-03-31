@@ -41,26 +41,18 @@ export default function AdminLayout({
 
   return (
     <AppProvider>
-      <div className="flex min-h-screen">
+      <div className="min-h-screen bg-[#2e4a63]">
         {/* Admin Header */}
         <header className="bg-[#1a2f3f] shadow-sm border-b border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <h1 className="text-xl font-bold text-white">Admin Panel</h1>
-                <span className="ml-3 text-sm text-gray-400">
-                  Al Maalem Restaurant
-                </span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <LogoutButton isAdmin={true} />
-              </div>
+              <LogoutButton isAdmin={true} />
             </div>
           </div>
         </header>
 
         {/* Main content */}
-        <main className="flex-1 bg-[#2e4a63]">{children}</main>
+        <main className="flex-1">{children}</main>
       </div>
     </AppProvider>
   );
