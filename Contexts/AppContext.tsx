@@ -220,7 +220,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             },
           );
           const result = await res.json();
-          if (result.cart) setData(result.cart.items);
+          if (result.cart) {
+            setData(result.cart.items);
+            localStorage.removeItem("cart");
+          }
         } catch (err) {
           console.error("Failed to fetch server cart", err);
         }
@@ -233,7 +236,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     fetchInitialCart();
-  }, [fetchData]); // Runs only ONCE on mount and once logged in
+  }, []); // Remove fetchData dependency to prevent infinite loop
 
   useEffect(() => {
     const token = localStorage.getItem("token");
