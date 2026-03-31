@@ -17,11 +17,14 @@ function LoginContent() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5001/api/user/signin", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/user/signin",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        },
+      );
       const data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
