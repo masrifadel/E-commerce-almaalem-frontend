@@ -91,6 +91,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/Logo.png" sizes="32x32" />
+        <link rel="icon" href="/Logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/Logo.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#c27a2c" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
