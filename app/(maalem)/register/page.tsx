@@ -23,21 +23,53 @@ function RegisterContent() {
     const loadingToast = toast.loading("Creating your account...");
 
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/user/signup",
-        {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        },
-      );
+      // Add retry logic for intermittent CORS issues
+      let retryCount = 0;
+      const maxRetries = 3;
+      let data;
+      let response;
 
-      const data = await response.json();
+      while (retryCount < maxRetries) {
+        try {
+          response = await fetch(
+            "https://maalem-backend-ybme.onrender.com/api/user/signup",
+            {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ name, email, password }),
+            },
+          );
 
-      if (!response.ok) {
+          data = await response.json();
+
+          // If successful, break the retry loop
+          if (response.ok) {
+            break;
+          }
+
+          // If not successful and we have retries left, wait and retry
+          if (retryCount < maxRetries - 1) {
+            retryCount++;
+            console.log(`Retry ${retryCount} for signup...`);
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            ); // Exponential backoff
+          }
+        } catch (error) {
+          retryCount++;
+          console.log(`Retry ${retryCount} for signup due to error:`, error);
+          if (retryCount < maxRetries) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
+          }
+        }
+      }
+
+      if (!response || !response.ok) {
         // Handle different error types
         if (
-          response.status === 400 &&
+          response?.status === 400 &&
           data.message?.includes("already exists")
         ) {
           toast.error(
@@ -45,7 +77,7 @@ function RegisterContent() {
             { id: loadingToast },
           );
           return;
-        } else if (response.status === 400) {
+        } else if (response?.status === 400) {
           toast.error(
             data.message || "Invalid input. Please check your details.",
             { id: loadingToast },
