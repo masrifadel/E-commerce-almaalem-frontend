@@ -70,9 +70,18 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Use ref to track initial fetch state
   const isInitialFetchRef = useRef(false);
 
+  // Debounce refs to prevent rapid successive calls
+  const categoriesTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const productsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const refreshCategories = async () => {
     // Skip API calls during build time
     if (typeof window === "undefined") return;
+
+    // Clear any pending timeout
+    if (categoriesTimeoutRef.current) {
+      clearTimeout(categoriesTimeoutRef.current);
+    }
 
     // Set loading state
     setCategoriesLoading(true);
@@ -125,6 +134,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } else {
         console.error("Failed to fetch categories after retries");
+        // Don't clear categories on failure, just log the error
       }
     } catch (error) {
       console.error("Failed to refresh categories:", error);
@@ -186,6 +196,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } else {
         console.error("Failed to fetch products after retries");
+        // Don't clear products on failure, just log the error
       }
     } catch (error) {
       console.error("Failed to refresh products:", error);
@@ -246,10 +257,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           e.key === "products-updated" ||
           e.key === "orders-updated")
       ) {
+        // Add debouncing to prevent rapid successive calls
         if (e.key === "categories-updated") {
-          refreshCategories();
+          if (categoriesTimeoutRef.current) {
+            clearTimeout(categoriesTimeoutRef.current);
+          }
+          categoriesTimeoutRef.current = setTimeout(() => {
+            refreshCategories();
+          }, 500);
         } else if (e.key === "products-updated") {
-          refreshProducts();
+          if (productsTimeoutRef.current) {
+            clearTimeout(productsTimeoutRef.current);
+          }
+          productsTimeoutRef.current = setTimeout(() => {
+            refreshProducts();
+          }, 500);
         } else if (e.key === "orders-updated") {
           refreshOrders();
         }
@@ -266,10 +288,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const timer = setTimeout(() => {
       refreshCategories();
       refreshProducts();
-      // Clear the flag after initial fetch completes
+      // Clear the flag after a longer delay to prevent flickering
       setTimeout(() => {
         isInitialFetchRef.current = false;
-      }, 50);
+      }, 2000); // Increased from 50ms to 2000ms
     }, 100);
 
     return () => clearTimeout(timer);
