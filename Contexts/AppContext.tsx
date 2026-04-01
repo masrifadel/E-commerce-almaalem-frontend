@@ -223,6 +223,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           if (result.cart) {
             setData(result.cart.items);
             localStorage.removeItem("cart");
+          } else if (result.items) {
+            setData(result.items);
+            localStorage.removeItem("cart");
           }
         } catch (err) {
           console.error("Failed to fetch server cart", err);
