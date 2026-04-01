@@ -9,6 +9,7 @@ const page = () => {
     setFetchData,
     fetchData,
     setData,
+    data, // Add data from context
     refreshTrigger,
     setRefreshTrigger,
     triggerOrderUpdate,
@@ -114,6 +115,7 @@ const page = () => {
       const orderData = await res.json();
       if (orderData) {
         console.log("✅ Order placed successfully!");
+        console.log("Order data:", orderData);
         setData([]);
         setFetchData((prev) => !prev);
         setRefreshTrigger(!refreshTrigger);
@@ -122,7 +124,14 @@ const page = () => {
         console.log("📞 Calling triggerOrderUpdate...");
         triggerOrderUpdate();
 
-        router.push(`/receipt/${orderData.order._id}`);
+        // Navigate to receipt page using correct order ID
+        const orderId = orderData._id || orderData.order?._id;
+        if (orderId) {
+          router.push(`/receipt/${orderId}`);
+        } else {
+          console.error("Order ID not found in response");
+          toast.error("Order created but couldn't navigate to receipt");
+        }
       } else {
         toast.error(orderData.message || "Failed to place order");
       }
