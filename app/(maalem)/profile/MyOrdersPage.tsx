@@ -34,7 +34,11 @@ const MyOrdersPage = ({ orders }: { orders: any }) => {
             <div className="flex flex-col gap-2 sm:hidden">
               <div className="flex items-center gap-3">
                 <img
-                  src={`https://maalem-backend-ybme.onrender.com${order.items[0].productId.url}`}
+                  src={
+                    order.items[0]?.productId?.url
+                      ? `https://maalem-backend-ybme.onrender.com${order.items[0].productId.url}`
+                      : "/placeholder.png"
+                  }
                   alt="Product"
                   className="w-14 h-14 object-cover rounded"
                 />
@@ -74,7 +78,11 @@ const MyOrdersPage = ({ orders }: { orders: any }) => {
             {/* Desktop Layout */}
             <div className="hidden sm:grid grid-cols-7 gap-4 items-center text-center">
               <img
-                src={`https://maalem-backend-ybme.onrender.com${order.items[0].productId.url}`}
+                src={
+                  order.items[0]?.productId?.url
+                    ? `https://maalem-backend-ybme.onrender.com${order.items[0].productId.url}`
+                    : "/placeholder.png"
+                }
                 alt="Product"
                 className="w-12 h-12 object-cover rounded mx-auto"
               />
