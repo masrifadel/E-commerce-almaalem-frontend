@@ -1,7 +1,6 @@
 import { AppProvider } from "@/Contexts/AppContext";
 import Header from "@/components/Common/Header";
 import Footer from "@/components/Common/Footer";
-import { Toaster } from "sonner";
 
 export default function MaalemLayout({
   children,
@@ -10,7 +9,6 @@ export default function MaalemLayout({
 }) {
   return (
     <AppProvider>
-      <Toaster position="top-center" richColors closeButton />
       <div className="maalem-main min-h-dvh flex flex-col bg-page">
         <Header />
         <main

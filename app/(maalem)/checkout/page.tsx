@@ -60,6 +60,7 @@ const page = () => {
     saveAddress: false,
   });
   const [savedAddresses, setSavedAddresses] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -88,8 +89,14 @@ const page = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    if (isSubmitting) return; // Prevent multiple submissions
+
+    setIsSubmitting(true);
+
     try {
       const token = localStorage.getItem("token");
+
       const res = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/checkout",
         {
@@ -98,11 +105,14 @@ const page = () => {
             "content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ shippingAddress }),
+          body: JSON.stringify({
+            shippingAddress,
+            items: data, // Correct property name from AppContext
+          }),
         },
       );
-      const data = await res.json();
-      if (res.ok) {
+      const orderData = await res.json();
+      if (orderData) {
         console.log("✅ Order placed successfully!");
         setData([]);
         setFetchData((prev) => !prev);
@@ -112,12 +122,16 @@ const page = () => {
         console.log("📞 Calling triggerOrderUpdate...");
         triggerOrderUpdate();
 
-        router.push(`/receipt/${data.order._id}`);
+        router.push(`/receipt/${orderData.order._id}`);
       } else {
-        toast.error(data.message);
+        toast.error(orderData.message || "Failed to place order");
       }
-      console.log(data);
-    } catch (err: any) {}
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      toast.error("Failed to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: any) => {
@@ -301,9 +315,10 @@ const page = () => {
             <div className=" flex justify-center items-center">
               <button
                 type="submit"
-                className="w-fit px-6 py-2 text-white bg-[#2e4a63] hover:bg-white hover:text-[#c27a2c] font-bold rounded-lg mt-4 hover:bg-opacity-90 transition-all duration-300 cursor-pointer shadow-md active:scale-95"
+                disabled={isSubmitting}
+                className="w-fit px-6 py-2 text-white bg-[#2e4a63] hover:bg-white hover:text-[#c27a2c] font-bold rounded-lg mt-4 hover:bg-opacity-90 transition-all duration-300 cursor-pointer shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Place Order
+                {isSubmitting ? "Placing Order..." : "Place Order"}
               </button>
             </div>
           </form>
