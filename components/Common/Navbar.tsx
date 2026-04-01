@@ -21,17 +21,8 @@ const Navbar = () => {
   const { categories, data } = useAppContext();
 
   const handleProfileClick = () => {
-    // 1. Check if the token exists in LocalStorage
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      // 2. No token? Send them to Login
-      // We add '?redirect=/profile' so they come back here automatically later
-      router.push("/login?redirect=/profile");
-    } else {
-      // 3. Token exists? Send them to their actual Profile/History page
-      router.push("/profile");
-    }
+    // Direct to admin login
+    router.push("/login");
   };
 
   const toggleNavDrawer = () => {

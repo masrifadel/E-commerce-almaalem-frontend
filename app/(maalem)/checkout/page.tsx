@@ -58,35 +58,10 @@ const page = () => {
     floor: "",
     directions: "",
     phoneNumber: "",
+    name: "", // Add name field
     saveAddress: false,
   });
-  const [savedAddresses, setSavedAddresses] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      console.log("Hi");
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          "https://maalem-backend-ybme.onrender.com/api/user/addresses",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setSavedAddresses(data.addresses);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAddresses();
-  }, []);
-  console.log("savedAddresses", savedAddresses);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -96,15 +71,12 @@ const page = () => {
     setIsSubmitting(true);
 
     try {
-      const token = localStorage.getItem("token");
-
       const res = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/checkout",
         {
           method: "POST",
           headers: {
             "content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             shippingAddress,
@@ -163,36 +135,21 @@ const page = () => {
             Shipping Address
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {savedAddresses.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-white font-bold mb-2">
-                  Select Previous Address
-                </h2>
-
-                <div className="space-y-2">
-                  {savedAddresses.map((addr: any, index) => (
-                    <div
-                      key={index}
-                      onClick={() =>
-                        setShippingAddress((prev) => ({
-                          governorate: addr.governorate || "",
-                          city: addr.city || "",
-                          street: addr.street || "",
-                          building: addr.building || "",
-                          floor: addr.floor || "",
-                          directions: addr.directions || "",
-                          phoneNumber: addr.phoneNumber || "",
-                          saveAddress: false, // ✅ ALWAYS defined
-                        }))
-                      }
-                      className="p-2 bg-[#2e4a63] text-white rounded cursor-pointer hover:bg-[#1f3447]"
-                    >
-                      {addr.city} - {addr.street}, {addr.building}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div>
+              <label className="text-[#2e4a63] font-semibold text-lg">
+                Full Name*
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                value={shippingAddress.name}
+                onChange={handleChange}
+                className="w-full p-2 mt-1 bg-[#2e4a63] rounded shadow text-[#c27a2c] focus:outline-none placeholder:text-gray-300
+                  autofill:shadow-[0_0_0_30px_#2e4a63_inset] [-webkit-text-fill-color:white]"
+                required
+              />
+            </div>
             <div>
               <label className="text-[#2e4a63] font-semibold text-lg">
                 Governorate*
