@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-  const { categories } = useAppContext();
+  const { categories, data } = useAppContext();
 
   const handleProfileClick = () => {
     // 1. Check if the token exists in LocalStorage
@@ -86,7 +86,7 @@ const Navbar = () => {
             >
               <IoBagOutline className="text-white hover:text-[#c27a2c] transition duration-200" />
               <span className="absolute -top-1 bg-[#c27a2c] text-xs rounded-full text-white px-1">
-                4
+                {data.length}
               </span>
             </button>
 
