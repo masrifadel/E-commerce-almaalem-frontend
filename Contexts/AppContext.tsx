@@ -78,16 +78,53 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setCategoriesLoading(true);
 
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/category",
-      );
-      if (response.ok) {
-        const data = await response.json();
+      // Add retry logic for API calls
+      let retryCount = 0;
+      const maxRetries = 3;
+      let response;
+      let data;
+
+      while (retryCount < maxRetries) {
+        try {
+          response = await fetch(
+            "https://maalem-backend-ybme.onrender.com/api/category",
+          );
+
+          if (response.ok) {
+            data = await response.json();
+            break;
+          }
+
+          // If not successful and we have retries left, wait and retry
+          if (retryCount < maxRetries - 1) {
+            retryCount++;
+            console.log(`Retry ${retryCount} for categories...`);
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
+          }
+        } catch (error) {
+          retryCount++;
+          console.log(
+            `Retry ${retryCount} for categories due to error:`,
+            error,
+          );
+          if (retryCount < maxRetries) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
+          }
+        }
+      }
+
+      if (response && response.ok && data) {
         setCategories(data);
         // Only signal other tabs if this is not the initial fetch
         if (!isInitialFetchRef.current) {
           localStorage.setItem("categories-updated", Date.now().toString());
         }
+      } else {
+        console.error("Failed to fetch categories after retries");
       }
     } catch (error) {
       console.error("Failed to refresh categories:", error);
@@ -105,16 +142,50 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setProductsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/products",
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(data.products || data);
+      // Add retry logic for API calls
+      let retryCount = 0;
+      const maxRetries = 3;
+      let response;
+      let data;
+
+      while (retryCount < maxRetries) {
+        try {
+          response = await fetch(
+            "https://maalem-backend-ybme.onrender.com/api/products",
+          );
+
+          if (response.ok) {
+            data = await response.json();
+            break;
+          }
+
+          // If not successful and we have retries left, wait and retry
+          if (retryCount < maxRetries - 1) {
+            retryCount++;
+            console.log(`Retry ${retryCount} for products...`);
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
+          }
+        } catch (error) {
+          retryCount++;
+          console.log(`Retry ${retryCount} for products due to error:`, error);
+          if (retryCount < maxRetries) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
+          }
+        }
+      }
+
+      if (response && response.ok && data) {
+        setProducts(data);
         // Only signal other tabs if this is not the initial fetch
         if (!isInitialFetchRef.current) {
           localStorage.setItem("products-updated", Date.now().toString());
         }
+      } else {
+        console.error("Failed to fetch products after retries");
       }
     } catch (error) {
       console.error("Failed to refresh products:", error);
