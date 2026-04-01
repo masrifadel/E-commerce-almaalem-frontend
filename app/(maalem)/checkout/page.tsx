@@ -18,6 +18,15 @@ const page = () => {
     [key: string]: string[]; // This is the "Index Signature" TypeScript is asking for
   }
 
+  // Check if cart has items and redirect to shipping address
+  useEffect(() => {
+    if (data && data.length > 0) {
+      // Cart has items, show shipping address form directly
+      // No need to call mergeToCart
+      console.log("Cart has items, showing shipping address form");
+    }
+  }, [data]);
+
   const citiesByGovernorate: CitiesData = {
     Beirut: [
       "Achrafieh",
