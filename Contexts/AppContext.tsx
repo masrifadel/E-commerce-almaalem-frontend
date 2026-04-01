@@ -87,9 +87,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setCategoriesLoading(true);
 
     try {
-      // Add retry logic for API calls
+      // Add retry logic for API calls with reduced frequency
       let retryCount = 0;
-      const maxRetries = 3;
+      const maxRetries = 2;
       let response;
       let data;
 
@@ -109,7 +109,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             retryCount++;
             console.log(`Retry ${retryCount} for categories...`);
             await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * retryCount),
+              setTimeout(resolve, 2000 * retryCount),
             );
           }
         } catch (error) {
@@ -120,7 +120,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           );
           if (retryCount < maxRetries) {
             await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * retryCount),
+              setTimeout(resolve, 2000 * retryCount),
             );
           }
         }
@@ -152,9 +152,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setProductsLoading(true);
 
     try {
-      // Add retry logic for API calls
+      // Add retry logic for API calls with reduced frequency
       let retryCount = 0;
-      const maxRetries = 3;
+      const maxRetries = 2;
       let response;
       let data;
 
@@ -174,7 +174,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             retryCount++;
             console.log(`Retry ${retryCount} for products...`);
             await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * retryCount),
+              setTimeout(resolve, 2000 * retryCount),
             );
           }
         } catch (error) {
@@ -182,7 +182,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           console.log(`Retry ${retryCount} for products due to error:`, error);
           if (retryCount < maxRetries) {
             await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * retryCount),
+              setTimeout(resolve, 2000 * retryCount),
             );
           }
         }
