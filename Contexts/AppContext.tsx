@@ -30,8 +30,7 @@ type AppContextType = {
   >;
   products: any[];
   setProducts: React.Dispatch<React.SetStateAction<any[]>>;
-  orders: any[];
-  setOrders: React.Dispatch<React.SetStateAction<any[]>>;
+  // Simple guest ordering - no cart complexity
   triggerOrderUpdate: () => void;
   refreshTrigger: boolean;
   setRefreshTrigger: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,14 +39,11 @@ type AppContextType = {
   setCategoriesLoading: React.Dispatch<React.SetStateAction<boolean>>;
   productsLoading: boolean;
   setProductsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  ordersLoading: boolean;
-  setOrdersLoading: React.Dispatch<React.SetStateAction<boolean>>;
   fetchData: boolean;
   setFetchData: React.Dispatch<React.SetStateAction<boolean>>;
   // Refresh functions
   refreshCategories: () => void;
   refreshProducts: () => void;
-  refreshOrders: () => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -298,49 +294,24 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    const fetchInitialCart = async () => {
-      // Skip API calls during build time
-      if (typeof window === "undefined") return;
+    // Initial fetch on mount - no cart needed for guest ordering
+    isInitialFetchRef.current = true;
+    const timer = setTimeout(() => {
+      refreshCategories();
+      refreshProducts();
+      // Clear flag after a longer delay to prevent flickering
+      setTimeout(() => {
+        isInitialFetchRef.current = false;
+      }, 2000);
+    }, 100);
 
-      const savedToken = localStorage.getItem("token");
+    return () => clearTimeout(timer);
+  }, []);
 
-      if (savedToken) {
-        try {
-          const res = await fetch(
-            "https://maalem-backend-ybme.onrender.com/api/cart",
-            {
-              headers: { Authorization: `Bearer ${savedToken}` },
-            },
-          );
-          const result = await res.json();
-          if (result.cart) {
-            setData(result.cart.items);
-            localStorage.removeItem("cart");
-          } else if (result.items) {
-            setData(result.items);
-            localStorage.removeItem("cart");
-          }
-        } catch (err) {
-          console.error("Failed to fetch server cart", err);
-        }
-      } else {
-        const saved = localStorage.getItem("cart");
-        if (saved) {
-          setData(JSON.parse(saved));
-        }
-      }
-    };
-
-    fetchInitialCart();
-  }, []); // Remove fetchData dependency to prevent infinite loop
-
+  // Simple cart state management for guest ordering
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    // Only save to localStorage if the user is NOT logged in
-    if (!token) {
-      localStorage.setItem("cart", JSON.stringify(data));
-    }
+    // Only save to localStorage for guest users (no authentication)
+    localStorage.setItem("cart", JSON.stringify(data));
   }, [data]);
 
   return (

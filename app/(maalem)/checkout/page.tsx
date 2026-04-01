@@ -9,22 +9,18 @@ const page = () => {
     setFetchData,
     fetchData,
     setData,
-    data, // Add data from context
+    data, // Cart items from context
     refreshTrigger,
     setRefreshTrigger,
     triggerOrderUpdate,
   } = useAppContext();
   interface CitiesData {
-    [key: string]: string[]; // This is the "Index Signature" TypeScript is asking for
+    [key: string]: string[]; // This is "Index Signature" TypeScript is asking for
   }
 
-  // Check if cart has items and redirect to shipping address
+  // Simple guest checkout - no cart API needed
   useEffect(() => {
-    if (data && data.length > 0) {
-      // Cart has items, show shipping address form directly
-      // No need to call mergeToCart
-      console.log("Cart has items, showing shipping address form");
-    }
+    console.log("Checkout page loaded with cart items:", data?.length || 0);
   }, [data]);
 
   const citiesByGovernorate: CitiesData = {
