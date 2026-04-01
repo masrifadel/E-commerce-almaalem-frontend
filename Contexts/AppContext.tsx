@@ -1,11 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
-
-declare global {
-  interface Window {
-    isInitialFetch?: boolean;
-  }
-}
+import { createContext, useContext, useState, useEffect } from "react";
 
 type AppContextType = {
   data: any[];
@@ -30,18 +24,14 @@ type AppContextType = {
   >;
   products: any[];
   setProducts: React.Dispatch<React.SetStateAction<any[]>>;
-  // Simple guest ordering - no cart complexity
-  triggerOrderUpdate: () => void;
   refreshTrigger: boolean;
   setRefreshTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-  // Loading states
+  fetchData: boolean;
+  setFetchData: React.Dispatch<React.SetStateAction<boolean>>;
   categoriesLoading: boolean;
   setCategoriesLoading: React.Dispatch<React.SetStateAction<boolean>>;
   productsLoading: boolean;
   setProductsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  fetchData: boolean;
-  setFetchData: React.Dispatch<React.SetStateAction<boolean>>;
-  // Refresh functions
   refreshCategories: () => void;
   refreshProducts: () => void;
 };
@@ -54,88 +44,26 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [data, setData] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState<
-    { _id: string; name: string; path: string; imageUrl: string }[]
+    {
+      _id: string;
+      name: string;
+      path: string;
+      imageUrl: string;
+    }[]
   >([]);
   const [products, setProducts] = useState<any[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  // Loading states
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [productsLoading, setProductsLoading] = useState(false);
-  const [ordersLoading, setOrdersLoading] = useState(false);
 
-  // Use ref to track initial fetch state
-  const isInitialFetchRef = useRef(false);
-
-  // Debounce refs to prevent rapid successive calls
-  const categoriesTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const productsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  // Simple fetch functions for categories and products
   const refreshCategories = async () => {
-    // Skip API calls during build time
-    if (typeof window === "undefined") return;
-
-    // Clear any pending timeout
-    if (categoriesTimeoutRef.current) {
-      clearTimeout(categoriesTimeoutRef.current);
-    }
-
-    // Set loading state
-    setCategoriesLoading(true);
-
     try {
-      // Add retry logic for API calls with reduced frequency
-      let retryCount = 0;
-      const maxRetries = 2;
-      let response;
-      let data;
-
-      while (retryCount < maxRetries) {
-        try {
-          response = await fetch(
-            "https://maalem-backend-ybme.onrender.com/api/category",
-          );
-
-          if (response.ok) {
-            data = await response.json();
-            break;
-          }
-
-          // If not successful and we have retries left, wait and retry
-          if (retryCount < maxRetries - 1) {
-            retryCount++;
-            console.log(`Retry ${retryCount} for categories...`);
-            await new Promise((resolve) =>
-              setTimeout(resolve, 2000 * retryCount),
-            );
-          }
-        } catch (error) {
-          retryCount++;
-          console.log(
-            `Retry ${retryCount} for categories due to error:`,
-            error,
-          );
-          if (retryCount < maxRetries) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 2000 * retryCount),
-            );
-          }
-        }
-      }
-
-      if (response && response.ok && data) {
-        setCategories(data);
-        // Only signal other tabs if this is not the initial fetch
-        if (!isInitialFetchRef.current) {
-          localStorage.setItem("categories-updated", Date.now().toString());
-        }
-      } else {
-        console.error("Failed to fetch categories after retries");
-        // Don't clear categories on failure, just log the error
-      }
+      const response = await fetch("https://maalem-backend-ybme.onrender.com/api/category");
+      const data = await response.json();
+      setCategories(data);
     } catch (error) {
-      console.error("Failed to refresh categories:", error);
+      console.error("Failed to fetch categories:", error);
     } finally {
-      // Clear loading state
       setCategoriesLoading(false);
     }
   };
@@ -148,51 +76,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setProductsLoading(true);
 
     try {
-      // Add retry logic for API calls with reduced frequency
-      let retryCount = 0;
-      const maxRetries = 2;
-      let response;
-      let data;
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/products",
+      );
 
-      while (retryCount < maxRetries) {
-        try {
-          response = await fetch(
-            "https://maalem-backend-ybme.onrender.com/api/products",
-          );
-
-          if (response.ok) {
-            data = await response.json();
-            break;
-          }
-
-          // If not successful and we have retries left, wait and retry
-          if (retryCount < maxRetries - 1) {
-            retryCount++;
-            console.log(`Retry ${retryCount} for products...`);
-            await new Promise((resolve) =>
-              setTimeout(resolve, 2000 * retryCount),
-            );
-          }
-        } catch (error) {
-          retryCount++;
-          console.log(`Retry ${retryCount} for products due to error:`, error);
-          if (retryCount < maxRetries) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 2000 * retryCount),
-            );
-          }
-        }
-      }
-
-      if (response && response.ok && data) {
+      if (response.ok) {
+        const data = await response.json();
         setProducts(data);
         // Only signal other tabs if this is not the initial fetch
         if (!isInitialFetchRef.current) {
           localStorage.setItem("products-updated", Date.now().toString());
         }
       } else {
-        console.error("Failed to fetch products after retries");
-        // Don't clear products on failure, just log the error
+        console.error("Failed to fetch products");
       }
     } catch (error) {
       console.error("Failed to refresh products:", error);
@@ -202,8 +98,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const refreshOrders = async () => {
-    // Set loading state
     setOrdersLoading(true);
 
     try {

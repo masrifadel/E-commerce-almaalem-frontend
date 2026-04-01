@@ -1,151 +1,132 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAppContext } from "@/Contexts/AppContext";
 
 function LoginContent() {
   const { setData } = useAppContext();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  // This grabs "/profile" from the URL if it exists
-  const redirectTo = searchParams.get("redirect");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Fixed admin credentials
+  const ADMIN_EMAIL = "maalem@example.com";
+  const ADMIN_PASSWORD = "password";
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/user/signin",
-        {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        },
-      );
-      const data = await response.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      const token = localStorage.getItem("token");
-      const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const localUser = JSON.parse(localStorage.getItem("user") || "");
-
-      const cartResponse = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/cart",
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            items: localCart,
+      // Simple admin authentication
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        // Set admin token
+        localStorage.setItem("token", "admin_token_" + Date.now());
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            name: "Admin User",
+            email: ADMIN_EMAIL,
+            role: "admin",
           }),
-        },
-      );
+        );
 
-      const cartData = await cartResponse.json();
-      console.log("cartData", cartData);
-      setData(cartData.cart.items);
-      localStorage.removeItem("cart");
-      if (localUser?.role === "user") {
-        router.push("profile");
-      } else if (localUser?.role === "admin") {
-        router.push("admin");
+        // Clear cart and redirect to admin
+        localStorage.removeItem("cart");
+        setData([]);
+        router.push("/admin");
+      } else {
+        setError("Invalid admin credentials");
       }
-      router.refresh();
     } catch (error) {
-      console.log("error", error);
+      setError("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex">
-      <div className="w-full sm:w-1/2  flex justify-center items-center p-2 sm:p-0">
-        <div className="flex flex-col items-center justify-center border-sm shadow-sm p-8 rounded">
-          {/* Login details */}
-          <h2 className="text-xl font-medium text-center mb-6 text-[#c27a2c]">
-            المعلم
-          </h2>
-          <h2 className="text-2xl font-bold text-center mb-6 text-white">
-            Hey there! 👋
-          </h2>
-          <p className="text-center mb-6 text-white">
-            Enter your username and password to login
-          </p>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold mb-2 text-white"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 border rounded outline-none text-black bg-white"
-                placeholder="Enter your email address"
-              />
+    <div className="flex min-h-screen bg-[#c27a2c]">
+      <div className="w-full sm:w-1/2 flex justify-center items-center p-2 sm:p-0">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-xl p-8">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-[#c27a2c] mb-2">
+                Admin Login
+              </h1>
+              <p className="text-gray-600 mb-6">
+                Al Maalem Restaurant Admin Panel
+              </p>
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold mb-2 text-white"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                minLength={8}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border rounded outline-none  text-black bg-white"
-                placeholder="Enter your password"
-              />
-            </div>
-            <button
-              type="submit"
-              className="text-white bg-[#c27a2c] hover:bg-[#2e4a63] w-full p-2 rounded-lg dont-semibold transition cursor-pointer mt-4"
-            >
-              Sign In
-            </button>
-            <p className="mt-6 text-center text-sm text-white">
-              Don't have an account?
-              <span>
-                <Link
-                  href={`/register?redirect=${redirectTo}`}
-                  className="text-blue-500 ml-1"
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-100 border border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                  {error}
+                </div>
+              )}
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Register
-                </Link>
-              </span>
-            </p>
-          </form>
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#c27a2c]"
+                  placeholder="Enter admin email"
+                  defaultValue={ADMIN_EMAIL}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#c27a2c]"
+                  placeholder="Enter admin password"
+                  defaultValue={ADMIN_PASSWORD}
+                  required
+                />
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#c27a2c] hover:bg-[#2e4a63] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c27a2c] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Signing in..." : "Sign In"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <div className="hidden md:block w-1/2">
-        {/* Image */}
-        <img
-          src="/Logo.png"
-          alt="Login Image"
-          className="h-[480px] w-full object-cover"
-        />
       </div>
     </div>
   );
 }
 
 export default function Login() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LoginContent />
-    </Suspense>
-  );
+  return <LoginContent />;
 }
