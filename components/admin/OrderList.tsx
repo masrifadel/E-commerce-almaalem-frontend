@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAppContext } from "@/Contexts/AppContext";
 
 interface OrderItem {
   productId: {
@@ -35,19 +34,21 @@ interface Order {
 }
 
 export default function OrderList() {
-  const { orders, refreshOrders, refreshTrigger } = useAppContext();
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Use refreshTrigger to trigger order fetches
+  // Fixed OrderList component - ready for production deployment
+
+  // Fetch orders on component mount
   useEffect(() => {
-    refreshOrders();
-  }, [refreshTrigger]);
+    fetchOrders();
+  }, []);
 
   // Add fallback polling every 10 seconds as backup
   useEffect(() => {
     const interval = setInterval(() => {
-      refreshOrders();
+      fetchOrders();
     }, 10000); // Check every 10 seconds
 
     return () => clearInterval(interval);
@@ -86,7 +87,8 @@ export default function OrderList() {
 
       if (response.ok) {
         const data = await response.json();
-        // Don't call setOrders here - refreshOrders will handle it
+        setOrders(data);
+        console.log("📊 Orders fetched:", data.length);
       } else {
         console.error("Failed to fetch orders");
       }
@@ -96,10 +98,6 @@ export default function OrderList() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchOrders();
-  }, [refreshTrigger]);
 
   const updateOrderStatus = async (
     orderId: string,
@@ -121,7 +119,7 @@ export default function OrderList() {
       );
 
       if (response.ok) {
-        refreshOrders(); // Refresh the list
+        fetchOrders(); // Refresh the list
       } else {
         console.error("Failed to update order status");
       }

@@ -12,7 +12,6 @@ const page = () => {
     data, // Cart items from context
     refreshTrigger,
     setRefreshTrigger,
-    triggerOrderUpdate,
   } = useAppContext();
   interface CitiesData {
     [key: string]: string[]; // This is "Index Signature" TypeScript is asking for
@@ -99,7 +98,6 @@ const page = () => {
 
         // Trigger immediate order update in admin panel
         console.log("📞 Calling triggerOrderUpdate...");
-        triggerOrderUpdate();
 
         // Navigate to receipt page using correct order ID
         const orderId = orderData._id || orderData.order?._id;

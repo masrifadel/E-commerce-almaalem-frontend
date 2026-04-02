@@ -17,21 +17,13 @@ const CartDrawer = ({
   };
   const router = useRouter();
   const handleCheckout = () => {
-    const token = localStorage.getItem("token");
     setDrawerOpen(false);
-    if (!token) {
-      toast.error("Please login to add items to your cart");
-      router.push("/login");
-      console.log("No token found");
-      return;
+    // Guest ordering - no token required
+    if (data.length > 0) {
+      router.push("/checkout");
     } else {
-      if (data.length > 0) {
-        router.push("/checkout");
-      } else {
-        toast.error("Please fill your cart first");
-      }
+      toast.error("Please add items to your cart first");
     }
-    console.log("Token found", token);
   };
 
   return (

@@ -13,55 +13,34 @@ type Product = {
 };
 
 const Quantity = ({ product }: { product: Product }) => {
-  const { setData, data } = useAppContext();
+  const { setData } = useAppContext();
   // const [data, setData] = useState<Product[]>([]);
   const [quantitySelected, setQuantitySelected] = useState(1);
 
-  const handleAddToCart = async (product: Product) => {
-    const token = localStorage.getItem("token");
-    try {
-      if (token) {
-        const res = await fetch(
-          "https://maalem-backend-ybme.onrender.com/api/cart/addProduct",
-          {
-            method: "POST",
-            headers: {
-              "content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              productId: product._id,
-              quantity: quantitySelected,
-            }),
-          },
+  const handleAddToCart = (product: Product) => {
+    // Pure frontend cart management - no backend API calls needed
+    setData((prev) => {
+      // 1. Check if product is already in cart
+      const itemExists = prev.find((item) => item._id === product._id);
+      let updatedCart;
+      if (itemExists) {
+        // 2. Update quantity if item exists
+        updatedCart = prev.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + quantitySelected }
+            : item,
         );
-        const AddedCart = await res.json();
-        console.log("AddedCart ======================== >", AddedCart);
-        setData(AddedCart.cart.items);
       } else {
-        setData((prev = []) => {
-          // 1. Check if the product is already in the cart
-          const itemExists = prev.find((item) => item._id === product._id);
-          let updatedCart;
-          if (itemExists) {
-            // 2. EQUIVALENT TO: data[i].quantity += quantitySelected
-            updatedCart = prev.map((item) =>
-              item._id === product._id
-                ? { ...item, quantity: item.quantity + quantitySelected }
-                : item,
-            );
-          } else {
-            updatedCart = [...prev, { ...product, quantity: quantitySelected }];
-          }
-          // 3. EQUIVALENT TO: if(i === data.length - 1) { return [...prev, newItem] }
-          localStorage.setItem("cart", JSON.stringify(updatedCart));
-          return updatedCart;
-        });
+        // 3. Add new item if it doesn't exist
+        updatedCart = [...prev, { ...product, quantity: quantitySelected }];
       }
-      toast.success(product.name + " added to the cart");
-    } catch (err) {
-      console.log(err);
-    }
+
+      // 4. Save to localStorage for persistence
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+
+    toast.success(product.name + " added to cart");
   };
 
   return (

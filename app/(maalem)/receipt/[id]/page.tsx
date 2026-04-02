@@ -146,12 +146,7 @@ const ReceiptPage = () => {
 
         {/* Button */}
         <div className="flex gap-2">
-          <Link
-            href="/profile"
-            className="w-full bg-[#2f4f6f] text-center hover:bg-[#1e3a56] text-white py-3 rounded-lg transition"
-          >
-            Show Orders
-          </Link>
+         
           <Link
             href="/"
             className="w-full text-center bg-[#2f4f6f] hover:bg-[#1e3a56] text-white py-3 rounded-lg transition"

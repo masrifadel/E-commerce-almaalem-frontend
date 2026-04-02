@@ -7,11 +7,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:5001/api/:path*", // Proxy to Backend
+        destination: "https://maalem-backend-ybme.onrender.com/api/:path*", // Production backend
       },
     ];
   },
-  
+
   images: {
     remotePatterns: [
       {

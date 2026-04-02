@@ -1,6 +1,6 @@
 "use client";
 import { IoBagOutline, IoSearch } from "react-icons/io5";
-import { HiBars3BottomRight, HiOutlineUser } from "react-icons/hi2";
+import { HiBars3BottomRight } from "react-icons/hi2";
 import Link from "next/link";
 import { FaWhatsapp, FaFacebook } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io";
@@ -20,10 +20,7 @@ const Navbar = () => {
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const { categories, data } = useAppContext();
 
-  const handleProfileClick = () => {
-    // Direct to admin login
-    router.push("/login");
-  };
+  // Updated navbar - no profile icon for guest ordering
 
   const toggleNavDrawer = () => {
     setNavDrawerOpen(!navDrawerOpen);
@@ -65,12 +62,6 @@ const Navbar = () => {
             })}
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={handleProfileClick}>
-              <HiOutlineUser
-                className={`text-xl ${pathname === "/profile" ? "text-[#c27a2c]" : "text-white"} hover:text-[#c27a2c] transition duration-200`}
-              />
-            </button>
-
             <button
               className="relative cursor-pointer text-xl"
               onClick={() => setDrawerOpen(true)}
