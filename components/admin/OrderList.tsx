@@ -38,7 +38,7 @@ export default function OrderList() {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Fixed OrderList component - ready for production deployment
+  // Fresh deployment trigger - new day, new deployment
 
   // Fetch orders on component mount
   useEffect(() => {
