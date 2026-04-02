@@ -72,15 +72,12 @@ export default function OrderList() {
         token ? token.startsWith("Bearer ") : "N/A",
       );
 
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/checkout/admin/all",
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+      const response = await fetch("/api/checkout/admin/all", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
         },
-      );
+      });
 
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
@@ -106,17 +103,14 @@ export default function OrderList() {
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const response = await fetch(
-        `https://maalem-backend-ybme.onrender.com/api/checkout/admin/${orderId}/status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({ status: newStatus }),
+      const response = await fetch(`/api/checkout/admin/${orderId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
-      );
+        body: JSON.stringify({ status: newStatus }),
+      });
 
       if (response.ok) {
         fetchOrders(); // Refresh the list

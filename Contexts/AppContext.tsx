@@ -58,9 +58,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Simple fetch functions for categories and products
   const refreshCategories = async () => {
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/category",
-      );
+      const response = await fetch("/api/category");
       const data = await response.json();
       setCategories(data);
     } catch (error) {
@@ -72,9 +70,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshProducts = async () => {
     try {
-      const response = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/products",
-      );
+      const response = await fetch("/api/products");
       const data = await response.json();
       setProducts(data);
     } catch (error) {
