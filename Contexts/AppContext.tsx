@@ -94,6 +94,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  // Initial data fetch on mount
+  useEffect(() => {
+    refreshCategories();
+    refreshProducts();
+  }, []);
+
   // Simple cart state management for guest ordering
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(data));
