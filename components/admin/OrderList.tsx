@@ -87,10 +87,17 @@ export default function OrderList() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("📊 Raw orders data:", data);
+        console.log("📊 Orders type:", typeof data);
+        console.log(
+          "📊 Orders array length:",
+          Array.isArray(data) ? data.length : "Not an array",
+        );
         setOrders(data);
         console.log("📊 Orders fetched:", data.length);
       } else {
-        console.error("Failed to fetch orders");
+        console.error("❌ Failed to fetch orders - Status:", response.status);
+        console.error("❌ Response text:", await response.text());
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
