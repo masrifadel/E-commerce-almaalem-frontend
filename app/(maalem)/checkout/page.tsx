@@ -92,22 +92,26 @@ const page = () => {
       if (orderData) {
         console.log("✅ Order placed successfully!");
         console.log("Order data:", orderData);
+        console.log("Order ID:", orderData._id);
+        console.log("Order.order:", orderData.order);
+
+        // Clear cart
         setData([]);
         setFetchData((prev) => !prev);
         setRefreshTrigger(!refreshTrigger);
 
-        // Trigger immediate order update in admin panel
-        console.log("📞 Calling triggerOrderUpdate...");
-
         // Navigate to receipt page using correct order ID
-        const orderId = orderData._id || orderData.order?._id;
+        const orderId = orderData._id || orderData.order?._id || orderData.id;
+        console.log("🎯 Navigating to receipt with ID:", orderId);
+
         if (orderId) {
           router.push(`/receipt/${orderId}`);
         } else {
-          console.error("Order ID not found in response");
+          console.error("❌ Order ID not found in response");
           toast.error("Order created but couldn't navigate to receipt");
         }
       } else {
+        console.error("❌ Order creation failed:", orderData);
         toast.error(orderData.message || "Failed to place order");
       }
     } catch (err: any) {
