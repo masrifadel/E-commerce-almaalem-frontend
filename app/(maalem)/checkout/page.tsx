@@ -80,7 +80,7 @@ const page = () => {
         {
           method: "POST",
           headers: {
-            "content-Type": "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             shippingAddress,
@@ -89,21 +89,18 @@ const page = () => {
         },
       );
       const orderData = await res.json();
-      console.log(
-        "🔍 Full order response:",
-        JSON.stringify(orderData, null, 2),
-      );
-      console.log("🔍 Order data type:", typeof orderData);
-      console.log("🔍 Order data keys:", Object.keys(orderData));
-      console.log("🔍 Looking for ID in:", {
+      console.log(" Full order response:", JSON.stringify(orderData, null, 2));
+      console.log(" Order data type:", typeof orderData);
+      console.log(" Order data keys:", Object.keys(orderData));
+      console.log(" Looking for ID in:", {
         _id: orderData._id,
         id: orderData.id,
         "order._id": orderData.order?._id,
         "order.id": orderData.order?.id,
       });
 
-      if (orderData) {
-        console.log("✅ Order placed successfully!");
+      if (res.ok) {
+        console.log(" Order placed successfully!");
 
         // Clear cart
         setData([]);
@@ -111,22 +108,19 @@ const page = () => {
         setRefreshTrigger(!refreshTrigger);
 
         // Navigate to receipt page using correct order ID
-        const orderId =
-          orderData._id ||
-          orderData.order?._id ||
-          orderData.id ||
-          orderData.order?.id;
-        console.log("🎯 Final order ID to navigate:", orderId);
-        console.log("🎯 Navigation URL:", `/receipt/${orderId}`);
+        const orderId = orderData._id || orderData.id;
+        console.log(" Final order ID to navigate:", orderId);
+        console.log(" Navigation URL:", `/receipt/${orderId}`);
 
         if (orderId) {
           router.push(`/receipt/${orderId}`);
         } else {
-          console.error("❌ Order ID not found in response");
-          toast.error("Order created but couldn't navigate to receipt");
+          console.error(" Order ID not found in response");
+          toast.error("Order created but ID was missing");
         }
       } else {
-        console.error("❌ Order creation failed:", orderData);
+        console.error(" Order creation failed - Status:", res.status);
+        // Don't call res.text() to avoid "body stream already read" error
         toast.error(orderData.message || "Failed to place order");
       }
     } catch (err: any) {
