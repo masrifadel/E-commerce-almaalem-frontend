@@ -58,6 +58,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Simple fetch functions for categories and products
   const refreshCategories = async () => {
     try {
+      setCategoriesLoading(true);
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/category",
       );
@@ -72,6 +73,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshProducts = async () => {
     try {
+      setProductsLoading(true);
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/products",
       );
@@ -80,6 +82,53 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
+      setProductsLoading(false);
+    }
+  };
+
+  // Optimized parallel data fetch with caching
+  const fetchInitialData = async () => {
+    // Check if data is already cached in localStorage
+    const cachedCategories = localStorage.getItem("categories");
+    const cachedProducts = localStorage.getItem("products");
+
+    if (cachedCategories && cachedProducts) {
+      try {
+        setCategories(JSON.parse(cachedCategories));
+        setProducts(JSON.parse(cachedProducts));
+        console.log("📦 Loaded data from cache");
+        return;
+      } catch (error) {
+        console.error("Failed to parse cached data:", error);
+      }
+    }
+
+    // Fetch fresh data in parallel
+    try {
+      setCategoriesLoading(true);
+      setProductsLoading(true);
+
+      const [categoriesResponse, productsResponse] = await Promise.all([
+        fetch("https://maalem-backend-ybme.onrender.com/api/category"),
+        fetch("https://maalem-backend-ybme.onrender.com/api/products"),
+      ]);
+
+      const [categoriesData, productsData] = await Promise.all([
+        categoriesResponse.json(),
+        productsResponse.json(),
+      ]);
+
+      // Cache the data
+      localStorage.setItem("categories", JSON.stringify(categoriesData));
+      localStorage.setItem("products", JSON.stringify(productsData));
+
+      setCategories(categoriesData);
+      setProducts(productsData);
+      console.log("🚀 Fetched fresh data and cached");
+    } catch (error) {
+      console.error("Failed to fetch initial data:", error);
+    } finally {
+      setCategoriesLoading(false);
       setProductsLoading(false);
     }
   };
@@ -100,8 +149,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Initial data fetch on mount
   useEffect(() => {
-    refreshCategories();
-    refreshProducts();
+    fetchInitialData();
   }, []);
 
   // Simple cart state management for guest ordering

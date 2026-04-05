@@ -278,22 +278,6 @@ const page = () => {
                 className="w-full p-2 mt-1 bg-[#2e4a63] rounded shadow text-white placeholder:text-[#c27a2c] autofill:shadow-[0_0_0_30px_#2e4a63_inset] [-webkit-text-fill-color:white] focus:outline-none resize-none"
               />
             </div>
-            <div className="flex items-center space-x-3 pt-2">
-              <input
-                type="checkbox"
-                id="saveAddress"
-                name="saveAddress"
-                checked={shippingAddress.saveAddress}
-                onChange={handleChange}
-                className="w-5 h-5 cursor-pointer accent-white"
-              />
-              <label
-                htmlFor="saveAddress"
-                className="text-white font-medium cursor-pointer select-none"
-              >
-                Save address for future orders
-              </label>
-            </div>
             <div className=" flex justify-center items-center">
               <button
                 type="submit"
