@@ -6,103 +6,42 @@ const CartContent = () => {
   console.log("data", data);
 
   const handleIncCart = async (item: any) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      console.log("Increment from the backend side");
-      const res = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/cart/",
-        {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            productId: item.product._id,
-            action: "increment",
-          }),
-        },
-      );
-      const updatedCart = await res.json();
-      setData(updatedCart.cart.items);
-      console.log(updatedCart);
-    } else {
-      setData((prevData = []) => {
-        const updatedData = prevData.map((mappedItem) => {
-          if (mappedItem._id === item._id && item.quantity < 100) {
-            return { ...mappedItem, quantity: item.quantity + 1 };
-          }
-          return mappedItem;
-        });
-        return updatedData;
+    // Pure frontend cart management - no backend calls
+    setData((prevData = []) => {
+      const updatedData = prevData.map((mappedItem) => {
+        if (mappedItem._id === item._id && item.quantity < 100) {
+          return { ...mappedItem, quantity: item.quantity + 1 };
+        }
+        return mappedItem;
       });
-    }
+      return updatedData;
+    });
   };
 
   const handleDecCart = async (item: any) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const res = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/cart/",
-        {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            productId: item.product._id,
-            action: "decrement",
-          }),
-        },
-      );
-      const updatedCart = await res.json();
-      setData(updatedCart.cart.items);
-      console.log(updatedCart);
-    } else {
-      if (item.quantity === 1) {
-        return;
-      }
-      setData((prevData = []) => {
-        const updatedData = prevData.map((mappedItem) => {
-          if (mappedItem._id === item._id) {
-            return {
-              ...mappedItem,
-              quantity: item.quantity > 1 ? item.quantity - 1 : 1,
-            };
-          }
-          return mappedItem;
-        });
-        return updatedData;
-      });
+    // Pure frontend cart management - no backend calls
+    if (item.quantity === 1) {
+      return;
     }
+    setData((prevData = []) => {
+      const updatedData = prevData.map((mappedItem) => {
+        if (mappedItem._id === item._id) {
+          return {
+            ...mappedItem,
+            quantity: item.quantity > 1 ? item.quantity - 1 : 1,
+          };
+        }
+        return mappedItem;
+      });
+      return updatedData;
+    });
   };
 
   const handleDelete = async (item: any) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const res = await fetch(
-        "https://maalem-backend-ybme.onrender.com/api/cart/",
-        {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            productId: item.product._id,
-            action: "delete",
-          }),
-        },
-      );
-      const updatedCart = await res.json();
-      setData(updatedCart.cart.items);
-      console.log(updatedCart);
-    } else {
-      setData((prevData = []) =>
-        prevData.filter((item) => item._id !== item._id),
-      );
-    }
+    // Pure frontend cart management - no backend calls
+    setData((prevData = []) =>
+      prevData.filter((item) => item._id !== item._id),
+    );
   };
   return (
     <div>

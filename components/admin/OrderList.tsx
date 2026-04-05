@@ -59,18 +59,16 @@ export default function OrderList() {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+      console.log("🔑 Authentication Debug:");
+      console.log("Token exists:", !!token);
+      console.log("Token value:", token);
+      console.log("Token length:", token?.length);
+
       if (!token) {
-        console.error("No admin token found");
+        console.error("❌ No admin token found - redirecting to login");
+        window.location.href = "/login";
         return;
       }
-
-      console.log("Raw token:", token);
-      console.log("Token found:", token ? "YES" : "NO");
-      console.log("Token length:", token ? token.length : 0);
-      console.log(
-        "Token starts with Bearer:",
-        token ? token.startsWith("Bearer ") : "N/A",
-      );
 
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/checkout/admin/all",
@@ -82,8 +80,10 @@ export default function OrderList() {
         },
       );
 
+      console.log("🌐 API Response Debug:");
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
+      console.log("Response headers:", response.headers);
 
       if (response.ok) {
         const data = await response.json();
@@ -93,14 +93,34 @@ export default function OrderList() {
           "📊 Orders array length:",
           Array.isArray(data) ? data.length : "Not an array",
         );
+
+        if (Array.isArray(data)) {
+          console.log("📋 Order details:");
+          data.forEach((order, index) => {
+            console.log(`Order ${index + 1}:`, {
+              _id: order._id,
+              totalAmount: order.totalAmount,
+              status: order.status,
+              userInfo: order.userInfo,
+              itemsCount: order.items?.length || 0,
+            });
+          });
+        }
+
         setOrders(data);
-        console.log("📊 Orders fetched:", data.length);
+        console.log("✅ Orders set in state:", data.length);
       } else {
+        const errorText = await response.text();
         console.error("❌ Failed to fetch orders - Status:", response.status);
-        console.error("❌ Response text:", await response.text());
+        console.error("❌ Error response:", errorText);
+
+        if (response.status === 401) {
+          console.error("🔑 Authentication failed - token may be invalid");
+          window.location.href = "/login";
+        }
       }
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error("❌ Network error:", error);
     } finally {
       setLoading(false);
     }
