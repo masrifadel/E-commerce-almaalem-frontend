@@ -40,18 +40,12 @@ const ReceiptPage = () => {
       try {
         const response = await fetch(
           `https://maalem-backend-ybme.onrender.com/api/checkout/${entityId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         const result = await response.json();
-        console.log("HHHHEUHUHUHUH");
+        console.log("📋 Fetched order:", result);
         setFetchedOrder(result);
       } catch (error) {
         console.error("Fetch error:", error);
-      } finally {
       }
     };
 
@@ -62,25 +56,22 @@ const ReceiptPage = () => {
 
   console.log("fetchedOrder", fetchedOrder);
 
-  const order = {
-    id: "ORD-1024",
-    date: "March 29, 2026",
-    customer: "Fadel",
-    items: [
-      { name: "Zinger Burger", qty: 2, price: 8 },
-      { name: "Fries", qty: 1, price: 3 },
-      { name: "Pepsi", qty: 2, price: 2 },
-    ],
-    shipping: 2,
-    paymentMethod: "Cash on Delivery",
-  };
+  // Use fetched order data or show loading state
+  if (!fetchedOrder || Object.keys(fetchedOrder).length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-cover bg-center px-4">
+        <div className="text-white text-xl">Loading order details...</div>
+      </div>
+    );
+  }
 
-  const subtotal = order.items.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0,
-  );
+  const subtotal =
+    fetchedOrder.items?.reduce(
+      (acc: number, item: any) => acc + item.priceAtPurchase * item.quantity,
+      0,
+    ) || 0;
 
-  const total = subtotal + order.shipping;
+  const total = subtotal + 2; // Shipping cost
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center px-4">
@@ -95,14 +86,15 @@ const ReceiptPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-white">
           <p>
             <span className="font-semibold">Order ID:</span>{" "}
-            {fetchedOrder?._id?.slice(0, 4)}
+            {fetchedOrder._id?.slice(0, 8)}
           </p>
           <p>
             <span className="font-semibold">Date:</span>{" "}
             {new Date(fetchedOrder.createdAt).toLocaleDateString()}
           </p>
           <p>
-            <span className="font-semibold">Customer:</span> {myUser?.name}
+            <span className="font-semibold">Customer:</span>{" "}
+            {fetchedOrder.userInfo?.name}
           </p>
           <p>
             <span className="font-semibold">Payment:</span> Cash on Delivery
@@ -113,7 +105,7 @@ const ReceiptPage = () => {
         <div className="bg-[#2f4f6f] rounded-lg p-4 mb-6">
           <h2 className="text-white font-semibold mb-3">Items</h2>
 
-          {fetchedOrder?.items?.map((item: any, index: number) => (
+          {fetchedOrder.items?.map((item: any, index: number) => (
             <div
               key={index}
               className="flex justify-between text-gray-200 border-b border-gray-500 py-2"
@@ -121,32 +113,30 @@ const ReceiptPage = () => {
               <span>
                 {item.productId.name} x{item.quantity}
               </span>
-              <span>${item.productId.price * item.quantity}</span>
+              <span>${item.priceAtPurchase * item.quantity}</span>
             </div>
           ))}
         </div>
 
         {/* Summary */}
         <div className="text-white space-y-2 mb-6">
-          {/* <div className="flex justify-between">
+          <div className="flex justify-between">
             <span>Subtotal</span>
             <span>${subtotal}</span>
-          </div> */}
-
-          {/* <div className="flex justify-between">
+          </div>
+          <div className="flex justify-between">
             <span>Shipping</span>
-            <span></span>
-          </div> */}
+            <span>$2</span>
+          </div>
 
           <div className="flex justify-between font-bold text-lg border-t pt-2">
             <span>Total</span>
-            <span>${fetchedOrder.totalAmount}</span>
+            <span>${total}</span>
           </div>
         </div>
 
         {/* Button */}
         <div className="flex gap-2">
-         
           <Link
             href="/"
             className="w-full text-center bg-[#2f4f6f] hover:bg-[#1e3a56] text-white py-3 rounded-lg transition"
