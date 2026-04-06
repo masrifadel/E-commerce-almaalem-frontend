@@ -17,24 +17,40 @@ export default function AdminLayout({
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
 
+    console.log("🔑 Admin Layout Auth Check:");
+    console.log("Token exists:", !!token);
+    console.log("User exists:", !!user);
+    console.log("Token value:", token);
+    console.log("User value:", user);
+
     if (token && user) {
       try {
         const parsedUser = JSON.parse(user);
+        console.log("Parsed user:", parsedUser);
 
         // If user is not admin, redirect to appropriate page
         if (parsedUser.role !== "admin") {
+          console.error("❌ User is not admin:", parsedUser.role);
           toast.error("Access denied. Admin privileges required.");
           router.push("/profile");
           return;
         }
+
+        console.log("✅ Admin authentication successful");
       } catch (error) {
-        console.error("Error parsing user data:", error);
+        console.error("❌ Error parsing user data:", error);
         router.push("/login");
         return;
       }
     } else {
       // No token or user data, redirect to login
-      router.push("/login");
+      console.error("❌ No token or user data found");
+      // Add a small delay to allow login to complete
+      setTimeout(() => {
+        if (!localStorage.getItem("token")) {
+          router.push("/login");
+        }
+      }, 1000);
       return;
     }
   }, []);
