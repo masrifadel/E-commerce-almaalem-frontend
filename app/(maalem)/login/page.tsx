@@ -22,22 +22,32 @@ function LoginContent() {
     setError("");
 
     try {
-      // Simple admin authentication
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        // Create a proper admin token that backend will accept
-        const adminToken =
-          "admin_jwt_" +
-          Date.now() +
-          "_" +
-          Math.random().toString(36).substr(2, 9);
+      // Call backend JWT login endpoint
+      const response = await fetch(
+        "https://maalem-backend-ybme.onrender.com/api/user/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        },
+      );
 
-        // Set admin token
-        localStorage.setItem("token", adminToken);
+      if (response.ok) {
+        const data = await response.json();
+        const realToken = data.token;
+
+        // Set real JWT token
+        localStorage.setItem("token", realToken);
         localStorage.setItem(
           "user",
           JSON.stringify({
             name: "Admin User",
-            email: ADMIN_EMAIL,
+            email: email,
             role: "admin",
           }),
         );
@@ -47,7 +57,7 @@ function LoginContent() {
         setData([]);
         router.push("/admin");
       } else {
-        setError("Invalid admin credentials");
+        setError("Login failed. Please try again.");
       }
     } catch (error) {
       setError("Login failed. Please try again.");
