@@ -70,9 +70,6 @@ const ReceiptPage = () => {
       (acc: number, item: any) => acc + item.priceAtPurchase * item.quantity,
       0,
     ) || 0;
-
-  const total = subtotal + 2; // Shipping cost
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center px-4">
       <div className="w-full max-w-2xl bg-[#b87333] rounded-xl shadow-lg p-6 md:p-8">
@@ -123,15 +120,6 @@ const ReceiptPage = () => {
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span>${subtotal}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Shipping</span>
-            <span>$2</span>
-          </div>
-
-          <div className="flex justify-between font-bold text-lg border-t pt-2">
-            <span>Total</span>
-            <span>${total}</span>
           </div>
         </div>
 
