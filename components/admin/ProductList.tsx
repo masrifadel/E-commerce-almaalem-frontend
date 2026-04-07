@@ -60,7 +60,8 @@ export default function ProductList() {
       );
 
       if (response.ok) {
-        // Global refresh will be triggered by localStorage signal
+        // Refresh products list to show updated data
+        refreshProducts();
         console.log("Product deleted successfully");
       } else {
         const errorData = await response.json();
