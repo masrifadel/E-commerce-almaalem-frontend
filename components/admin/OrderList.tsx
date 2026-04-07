@@ -21,6 +21,7 @@ interface Order {
   items: OrderItem[];
   totalAmount: number;
   shippingAddress: {
+    name: string;
     governorate: string;
     city: string;
     street: string;
@@ -195,7 +196,7 @@ export default function OrderList() {
                     {formatDate(order.createdAt)}
                   </div>
                   <div className="text-gray-400 text-sm">
-                    Customer: {order.userId.name} ({order.userId.email})
+                    Customer: {order.shippingAddress.name}
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
