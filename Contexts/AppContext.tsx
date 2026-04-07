@@ -59,11 +59,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshCategories = async () => {
     try {
       setCategoriesLoading(true);
+      // Clear cache to force fresh data
+      localStorage.removeItem("categories");
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/category",
       );
       const data = await response.json();
       setCategories(data);
+      // Update cache with fresh data
+      localStorage.setItem("categories", JSON.stringify(data));
+      console.log("Categories refreshed with fresh data");
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     } finally {
@@ -74,11 +79,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshProducts = async () => {
     try {
       setProductsLoading(true);
+      // Clear cache to force fresh data
+      localStorage.removeItem("products");
       const response = await fetch(
         "https://maalem-backend-ybme.onrender.com/api/products",
       );
       const data = await response.json();
       setProducts(data);
+      // Update cache with fresh data
+      localStorage.setItem("products", JSON.stringify(data));
+      console.log("Products refreshed with fresh data");
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
