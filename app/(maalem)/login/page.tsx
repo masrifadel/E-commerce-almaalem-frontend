@@ -67,7 +67,7 @@ function LoginContent() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#c27a2c]">
+    <div className="flex min-h-screen">
       <div className="w-full sm:w-1/2 flex justify-center items-center p-2 sm:p-0">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-lg shadow-xl p-8">
