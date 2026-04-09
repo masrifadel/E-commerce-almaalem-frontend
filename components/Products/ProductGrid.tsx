@@ -67,7 +67,12 @@ const ProductGrid = ({ products }: { products: any }) => {
             {/* Image Container */}
             <div className="relative w-full h-56 sm:h-64 md:h-72 lg:h-84">
               <img
-                src={`https://maalem-backend-ybme.onrender.com${product.url}`}
+                src={
+                  product.url?.startsWith("data:")
+                    ? product.url
+                    : `https://maalem-backend-ybme.onrender.com${product.url}` ||
+                      "/placeholder.png"
+                }
                 alt={product.name}
                 className="h-full w-full object-cover transition duration-500 sm:group-hover:scale-110"
               />

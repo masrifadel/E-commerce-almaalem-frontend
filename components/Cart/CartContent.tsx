@@ -55,8 +55,10 @@ const CartContent = () => {
               <div className="flex items-start">
                 <img
                   src={
-                    "https://maalem-backend-ybme.onrender.com" +
-                    (item?.product?.url ? item.product.url : item.url)
+                    (item?.product?.url || item.url)?.startsWith("data:")
+                      ? item?.product?.url || item.url
+                      : `https://maalem-backend-ybme.onrender.com${item?.product?.url || item.url}` ||
+                        "/placeholder.png"
                   }
                   alt={item?.product?.name || item.name}
                   className="w-12 h-12 object-cover rounded"

@@ -33,8 +33,10 @@ const GenderCollectionSection = () => {
                 >
                   <img
                     src={
-                      `https://maalem-backend-ybme.onrender.com${category.imageUrl}` ||
-                      "/placeholder.png"
+                      category.imageUrl?.startsWith("data:")
+                        ? category.imageUrl
+                        : `https://maalem-backend-ybme.onrender.com${category.imageUrl}` ||
+                          "/placeholder.png"
                     }
                     alt={category.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

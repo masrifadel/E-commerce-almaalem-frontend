@@ -88,7 +88,12 @@ const Slider = ({
           return (
             <div className="grow-0 shrink-0 relative " key={index}>
               <img
-                src={`https://maalem-backend-ybme.onrender.com${item.url}`}
+                src={
+                  item.url?.startsWith("data:")
+                    ? item.url
+                    : `https://maalem-backend-ybme.onrender.com${item.url}` ||
+                      "/placeholder.png"
+                }
                 alt={item.url}
                 className="max-w-[300px] h-full object-cover rounded-lg"
               />
