@@ -43,7 +43,10 @@ const GenderCollectionSection = () => {
                   />
 
                   <div className="absolute bg-white/90 backdrop-blur-sm rounded p-2 bottom-4 shadow-sm sm:left-4 left-1 sm:shadow-md w-[140px] sm:w-[230px]">
-                    <h1 className="font-bold text-xs sm:text-sm">
+                    <h1
+                      className="font-bold text-xs sm:text-sm"
+                      style={{ fontSize: "12px", lineHeight: "1.2" }}
+                    >
                       {category.name}
                     </h1>
                     <p className="underline text-sm sm:text-xs cursor-pointer hover:text-gray-600">
