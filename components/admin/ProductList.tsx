@@ -24,6 +24,11 @@ export default function ProductList() {
   const { products, categories, refreshProducts } = useAppContext();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  // Re-render when products state changes
+  useEffect(() => {
+    // Component will re-render when products state updates
+  }, [products]);
+
   const getCategoryName = (categoryId: any) => {
     if (typeof categoryId === "string") {
       // Fallback for string categoryId
