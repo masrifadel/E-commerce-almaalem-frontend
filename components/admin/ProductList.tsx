@@ -21,7 +21,7 @@ interface Product {
 }
 
 export default function ProductList() {
-  const { products, categories } = useAppContext();
+  const { products, categories, refreshProducts } = useAppContext();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const getCategoryName = (categoryId: any) => {
