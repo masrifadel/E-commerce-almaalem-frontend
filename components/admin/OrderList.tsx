@@ -226,9 +226,10 @@ export default function OrderList() {
                     >
                       <img
                         src={
-                          item.productId?.url
-                            ? `https://maalem-backend-ybme.onrender.com${item.productId.url}`
-                            : "/placeholder.png"
+                          item.productId?.url?.startsWith("data:")
+                            ? item.productId.url
+                            : `https://maalem-backend-ybme.onrender.com${item.productId.url}` ||
+                              "/placeholder.png"
                         }
                         alt={item.productId?.name || "Product"}
                         className="w-12 h-12 object-cover rounded"
